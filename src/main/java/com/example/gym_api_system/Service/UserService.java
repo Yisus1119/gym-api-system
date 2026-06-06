@@ -1,0 +1,75 @@
+package com.example.gym_api_system.Service;
+
+import com.example.gym_api_system.Dtos.UserDTO;
+import com.example.gym_api_system.Models.User;
+
+import com.example.gym_api_system.Repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor // Lombok genera el constructor para la inyección de dependencias
+public class UserService {
+
+    private final UserRepository userRepository;
+
+    public List<UserDTO> get() {
+
+        return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
+                .map(this::userMapping)
+                .collect(Collectors.toList());
+    }
+
+    public UserDTO getById(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with the ID: " + userId + " was not found in the database"));
+
+        return userMapping(user);
+    }
+
+    public UserDTO post(UserDTO userDto) {
+        User user = new User();
+        user.setName(userDto.getName());
+        user.setWeight(userDto.getWeight());
+        user.setHeight(userDto.getHeight());
+
+        User savedUser = userRepository.save(user);
+
+        return userMapping(savedUser);
+    }
+
+    public UserDTO put(Long userId, UserDTO userDto) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with the ID: " + userId + " was not found in the database"));
+
+        user.setName(userDto.getName());
+        user.setWeight(userDto.getWeight());
+        user.setHeight(userDto.getHeight());
+
+        User updatedUser = userRepository.save(user);
+
+        return userMapping(updatedUser);
+    }
+
+    public void delete(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new RuntimeException("User with the ID: " + userId + " was not found in the database");
+        }
+
+        userRepository.deleteById(userId);
+    }
+
+    // Método auxiliar de mapeo (En el futuro podrías usar MapStruct para esto)
+    private UserDTO userMapping(User user) {
+        UserDTO dto = new UserDTO();
+
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setWeight(user.getWeight());
+        dto.setHeight(user.getHeight());
+
+        return dto;
+    }
+}

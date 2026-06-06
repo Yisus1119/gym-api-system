@@ -6,13 +6,13 @@ Este proyecto está construido siguiendo estándares de la industria, enfocado e
 
 ---
 
-## 🚀 Arquitectura del Sistema
+## Arquitectura del Sistema
 
 El proyecto implementa una **Arquitectura por Capas (Clean Architecture Lite)** para asegurar un código mantenible, desacoplado y fácil de testear.
 
 * **Controller Layer:** Expone los endpoints de la API RESTful manejando códigos de estado HTTP semánticos (`201 Created`, `204 No Content`, etc.).
   
-* **Service Layer:** Contiene el "cerebro" de la aplicación y las reglas de negocio, aislando por completo la persistencia del cliente.
+* **Service Layer:** Contiene el cerebro de la aplicación y las reglas de negocio, aislando por completo la persistencia del cliente.
   
 * **Repository Layer:** Abstracción de datos utilizando **Spring Data JPA**.
   
