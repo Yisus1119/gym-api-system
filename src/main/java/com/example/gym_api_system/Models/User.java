@@ -17,7 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private Double currentWeight;
+    private Double weight;
     private Double height;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

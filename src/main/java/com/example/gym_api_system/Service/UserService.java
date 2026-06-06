@@ -17,43 +17,43 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public List<UserDTO> getAllUsers() {
+    public List<UserDTO> get() {
 
         return userRepository.findAll(Sort.by(Sort.Direction.ASC, "id")).stream()
-                .map(this::convertToDTO)
+                .map(this::userMapping)
                 .collect(Collectors.toList());
     }
 
-    public UserDTO getUserById(Long userId) {
+    public UserDTO getById(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with the ID: " + userId + " was not found in the database"));
 
-        return convertToDTO(user);
+        return userMapping(user);
     }
 
-    public UserDTO createUser(UserDTO userDto) {
+    public UserDTO post(UserDTO userDto) {
         User user = new User();
         user.setName(userDto.getName());
-        user.setCurrentWeight(userDto.getCurrentWeight());
+        user.setWeight(userDto.getWeight());
         user.setHeight(userDto.getHeight());
 
         User savedUser = userRepository.save(user);
 
-        return convertToDTO(savedUser);
+        return userMapping(savedUser);
     }
 
-    public UserDTO updateUser(Long userId, UserDTO userDto) {
+    public UserDTO put(Long userId, UserDTO userDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User with the ID: " + userId + " was not found in the database"));
 
         user.setName(userDto.getName());
-        user.setCurrentWeight(userDto.getCurrentWeight());
+        user.setWeight(userDto.getWeight());
         user.setHeight(userDto.getHeight());
 
         User updatedUser = userRepository.save(user);
 
-        return convertToDTO(updatedUser);
+        return userMapping(updatedUser);
     }
 
-    public void deleteUser(Long userId) {
+    public void delete(Long userId) {
         if (!userRepository.existsById(userId)) {
             throw new RuntimeException("User with the ID: " + userId + " was not found in the database");
         }
@@ -62,12 +62,12 @@ public class UserService {
     }
 
     // Método auxiliar de mapeo (En el futuro podrías usar MapStruct para esto)
-    private UserDTO convertToDTO(User user) {
+    private UserDTO userMapping(User user) {
         UserDTO dto = new UserDTO();
 
         dto.setId(user.getId());
         dto.setName(user.getName());
-        dto.setCurrentWeight(user.getCurrentWeight());
+        dto.setWeight(user.getWeight());
         dto.setHeight(user.getHeight());
 
         return dto;

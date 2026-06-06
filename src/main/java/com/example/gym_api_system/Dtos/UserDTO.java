@@ -5,6 +5,6 @@ import lombok.Data;
 public class UserDTO {
     private Long id;
     private String name;
-    private Double currentWeight;
+    private Double weight;
     private Double height;
 }
